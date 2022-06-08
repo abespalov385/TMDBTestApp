@@ -19,14 +19,17 @@ class LocalDataModule {
 
     @Singleton
     @Provides
-    fun provideMovieLocalDataSource(moviesDao: MoviesDao): MovieLocalDataSource = MovieLocalDataSourceImpl(moviesDao)
+    fun provideMovieLocalDataSource(moviesDao: MoviesDao): MovieLocalDataSource =
+        MovieLocalDataSourceImpl(moviesDao)
 
     @Singleton
     @Provides
-    fun provideTvShowLocalDataSource(tvShowsDao: TvShowsDao): TvShowLocalDataSource = TvShowLocalDataSourceImpl(tvShowsDao)
+    fun provideTvShowLocalDataSource(tvShowsDao: TvShowsDao): TvShowLocalDataSource =
+        TvShowLocalDataSourceImpl(tvShowsDao)
 
     @Singleton
     @Provides
-    fun provideActorLocalDataSource(actorsDao: ActorsDao): ActorLocalDataSource = ActorLocalDataSourceImpl(actorsDao)
+    fun provideActorLocalDataSource(actorsDao: ActorsDao): ActorLocalDataSource =
+        ActorLocalDataSourceImpl(actorsDao)
 
 }

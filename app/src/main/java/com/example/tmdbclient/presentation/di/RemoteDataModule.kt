@@ -16,13 +16,16 @@ class RemoteDataModule(private val apiKey: String) {
 
     @Singleton
     @Provides
-    fun provideMovieRemoteDataSource(tmdbService: TMDBService): MovieRemoteDataSource = MovieRemoteDataSourceImpl(tmdbService, apiKey)
+    fun provideMovieRemoteDataSource(tmdbService: TMDBService): MovieRemoteDataSource =
+        MovieRemoteDataSourceImpl(tmdbService, apiKey)
 
     @Singleton
     @Provides
-    fun provideTvShowRemoteDataSource(tmdbService: TMDBService): TvShowRemoteDataSource = TvShowRemoteDataSourceImpl(tmdbService, apiKey)
+    fun provideTvShowRemoteDataSource(tmdbService: TMDBService): TvShowRemoteDataSource =
+        TvShowRemoteDataSourceImpl(tmdbService, apiKey)
 
     @Singleton
     @Provides
-    fun provideActorRemoteDataSource(tmdbService: TMDBService): ActorRemoteDataSource = ActorRemoteDataSourceImpl(tmdbService, apiKey)
+    fun provideActorRemoteDataSource(tmdbService: TMDBService): ActorRemoteDataSource =
+        ActorRemoteDataSourceImpl(tmdbService, apiKey)
 }

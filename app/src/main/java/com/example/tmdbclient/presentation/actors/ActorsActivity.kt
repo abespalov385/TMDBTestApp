@@ -1,11 +1,10 @@
 package com.example.tmdbclient.presentation.actors
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tmdbclient.R
@@ -32,35 +31,27 @@ class ActorsActivity : AppCompatActivity() {
         adapter = ActorAdapter()
         binding.actorRecyclerView.adapter = adapter
         binding.swipeRefresh.setOnRefreshListener {
-            updateMovies()
+            updateActors()
             binding.swipeRefresh.isRefreshing = false
         }
-        displayPopularMovies()
+        displayPopularActors()
     }
 
-    private fun displayPopularMovies() {
+    private fun displayPopularActors() {
         binding.actorProgressBar.visibility = View.VISIBLE
-        val responseLiveData = actorViewModel.getActors()
+        updateActors()
+        val responseLiveData = actorViewModel.allActors
         responseLiveData.observe(this) {
             if (!it.isNullOrEmpty()) {
-                adapter.setList(it)
-            } else {
-                Toast.makeText(applicationContext, "No data available", Toast.LENGTH_LONG).show()
+                Log.d("MyTag", it.toString())
+                adapter.submitList(it)
+                binding.actorProgressBar.visibility = View.GONE
             }
-            binding.actorProgressBar.visibility = View.GONE
         }
     }
 
-    private fun updateMovies() {
+    private fun updateActors() {
         binding.actorProgressBar.visibility = View.VISIBLE
-        val response = actorViewModel.updateActors()
-        response.observe(this) {
-            if (!it.isNullOrEmpty()) {
-                adapter.setList(it)
-            } else {
-                Toast.makeText(applicationContext, "No data available", Toast.LENGTH_LONG).show()
-            }
-            binding.actorProgressBar.visibility = View.GONE
-        }
+        actorViewModel.updateActors()
     }
 }

@@ -1,11 +1,11 @@
 package com.example.tmdbclient.data.repository.movie
 
 import com.example.tmdbclient.data.model.Movie
-import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
 
-@Singleton
 interface MovieLocalDataSource {
 
+    fun getMoviesFlowFromDB(): Flow<List<Movie>>
     suspend fun getMoviesFromDB(): List<Movie>
     suspend fun saveMoviesToDB(movies: List<Movie>)
     suspend fun clearAll()

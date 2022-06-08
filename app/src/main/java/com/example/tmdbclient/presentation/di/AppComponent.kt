@@ -13,7 +13,6 @@ import javax.inject.Singleton
     NetModule::class,
     RemoteDataModule::class,
     RepositoryModule::class,
-    CacheDataModule::class,
     LocalDataModule::class
 ])
 interface AppComponent {

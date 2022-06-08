@@ -10,6 +10,6 @@ interface ActorSubComponent {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create():ActorSubComponent
+        fun create(): ActorSubComponent
     }
 }

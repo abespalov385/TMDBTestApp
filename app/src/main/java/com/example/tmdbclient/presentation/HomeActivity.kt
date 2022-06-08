@@ -1,8 +1,8 @@
 package com.example.tmdbclient.presentation
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.example.tmdbclient.R
 import com.example.tmdbclient.databinding.ActivityHomeBinding
@@ -16,17 +16,17 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
 
-        binding.movieButton.setOnClickListener{
+        binding.movieButton.setOnClickListener {
             val intent = Intent(this, MovieActivity::class.java)
             startActivity(intent)
         }
 
-        binding.tvButton.setOnClickListener{
+        binding.tvButton.setOnClickListener {
             val intent = Intent(this, TvShowsActivity::class.java)
             startActivity(intent)
         }
 
-        binding.actorsButton.setOnClickListener{
+        binding.actorsButton.setOnClickListener {
             val intent = Intent(this, ActorsActivity::class.java)
             startActivity(intent)
         }

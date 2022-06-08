@@ -10,6 +10,6 @@ interface MovieSubComponent {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create():MovieSubComponent
+        fun create(): MovieSubComponent
     }
 }

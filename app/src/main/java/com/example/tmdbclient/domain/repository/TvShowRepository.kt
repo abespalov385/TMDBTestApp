@@ -1,10 +1,11 @@
 package com.example.tmdbclient.domain.repository
 
 import com.example.tmdbclient.data.model.TvShow
+import kotlinx.coroutines.flow.Flow
 
 interface TvShowRepository {
 
-    suspend fun getTvShows(): List<TvShow>?
-    suspend fun updateTvShows(): List<TvShow>?
+    fun getTvShows(): Flow<List<TvShow>>
+    suspend fun updateTvShows()
 
 }

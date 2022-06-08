@@ -17,12 +17,14 @@ class NetModule(private val baseUrl: String) {
     fun provideRetrofit(): Retrofit = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
         .client(OkHttpClient.Builder().addInterceptor(HttpLoggingInterceptor()
-            .also { it.level = HttpLoggingInterceptor.Level.BODY }).build())
+            .also { it.level = HttpLoggingInterceptor.Level.BODY }).build()
+        )
         .baseUrl(baseUrl)
         .build()
 
     @Singleton
     @Provides
-    fun provideTMDBService(retrofit: Retrofit): TMDBService = retrofit.create(TMDBService::class.java)
+    fun provideTMDBService(retrofit: Retrofit): TMDBService =
+        retrofit.create(TMDBService::class.java)
 
 }

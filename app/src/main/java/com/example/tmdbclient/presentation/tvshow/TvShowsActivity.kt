@@ -1,19 +1,15 @@
 package com.example.tmdbclient.presentation.tvshow
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tmdbclient.R
-import com.example.tmdbclient.databinding.ActivityMovieBinding
 import com.example.tmdbclient.databinding.ActivityTvShowsBinding
 import com.example.tmdbclient.presentation.di.Injector
-import com.example.tmdbclient.presentation.movie.MovieAdapter
-import com.example.tmdbclient.presentation.movie.MovieViewModel
 import javax.inject.Inject
 
 class TvShowsActivity : AppCompatActivity() {
@@ -35,35 +31,27 @@ class TvShowsActivity : AppCompatActivity() {
         adapter = TvShowAdapter()
         binding.tvShowRecyclerView.adapter = adapter
         binding.swipeRefresh.setOnRefreshListener {
-            updateMovies()
+            updateTvShows()
             binding.swipeRefresh.isRefreshing = false
         }
-        displayPopularMovies()
+        displayPopularTvShows()
     }
 
-    private fun displayPopularMovies() {
+    private fun displayPopularTvShows() {
         binding.tvShowProgressBar.visibility = View.VISIBLE
-        val responseLiveData = tvShowViewModel.getTvShows()
+        updateTvShows()
+        val responseLiveData = tvShowViewModel.allTvShows
         responseLiveData.observe(this) {
             if (!it.isNullOrEmpty()) {
-                adapter.setList(it)
-            } else {
-                Toast.makeText(applicationContext, "No data available", Toast.LENGTH_LONG).show()
+                Log.d("MyTag", it.toString())
+                adapter.submitList(it)
+                binding.tvShowProgressBar.visibility = View.GONE
             }
-            binding.tvShowProgressBar.visibility = View.GONE
         }
     }
 
-    private fun updateMovies() {
+    private fun updateTvShows() {
         binding.tvShowProgressBar.visibility = View.VISIBLE
-        val response = tvShowViewModel.updateTvShows()
-        response.observe(this) {
-            if (!it.isNullOrEmpty()) {
-                adapter.setList(it)
-            } else {
-                Toast.makeText(applicationContext, "No data available", Toast.LENGTH_LONG).show()
-            }
-            binding.tvShowProgressBar.visibility = View.GONE
-        }
+        tvShowViewModel.updateTvShows()
     }
 }

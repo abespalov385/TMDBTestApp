@@ -4,12 +4,16 @@ import com.example.tmdbclient.data.db.TvShowsDao
 import com.example.tmdbclient.data.model.TvShow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TvShowLocalDataSourceImpl @Inject constructor(private val tvShowsDao: TvShowsDao): TvShowLocalDataSource {
+class TvShowLocalDataSourceImpl @Inject constructor(private val tvShowsDao: TvShowsDao) :
+    TvShowLocalDataSource {
+
+    override fun getTvShowsFlowFromDB(): Flow<List<TvShow>> = tvShowsDao.getTvShowsFlow()
 
     override suspend fun getTvShowsFromDB(): List<TvShow> = tvShowsDao.getTvShows()
 

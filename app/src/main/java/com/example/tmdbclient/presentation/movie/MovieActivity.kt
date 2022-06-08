@@ -1,11 +1,10 @@
 package com.example.tmdbclient.presentation.movie
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tmdbclient.R
@@ -40,27 +39,19 @@ class MovieActivity : AppCompatActivity() {
 
     private fun displayPopularMovies() {
         binding.movieProgressBar.visibility = View.VISIBLE
-        val responseLiveData = movieViewModel.getMovies()
+        updateMovies()
+        val responseLiveData = movieViewModel.allMovies
         responseLiveData.observe(this) {
             if (!it.isNullOrEmpty()) {
-                adapter.setList(it)
-            } else {
-                Toast.makeText(applicationContext, "No data available", Toast.LENGTH_LONG).show()
+                Log.d("MyTag", it.toString())
+                adapter.submitList(it)
+                binding.movieProgressBar.visibility = View.GONE
             }
-            binding.movieProgressBar.visibility = View.GONE
         }
     }
 
     private fun updateMovies() {
         binding.movieProgressBar.visibility = View.VISIBLE
-        val response = movieViewModel.updateMovies()
-        response.observe(this, Observer {
-            if (!it.isNullOrEmpty()) {
-                adapter.setList(it)
-            } else {
-                Toast.makeText(applicationContext, "No data available", Toast.LENGTH_LONG).show()
-            }
-            binding.movieProgressBar.visibility = View.GONE
-        })
+        movieViewModel.updateMovies()
     }
 }

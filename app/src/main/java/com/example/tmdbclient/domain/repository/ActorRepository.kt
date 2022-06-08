@@ -1,9 +1,10 @@
 package com.example.tmdbclient.domain.repository
 
 import com.example.tmdbclient.data.model.Actor
+import kotlinx.coroutines.flow.Flow
 
 interface ActorRepository {
 
-    suspend fun getActors(): List<Actor>?
-    suspend fun updateActors(): List<Actor>?
+    fun getActors(): Flow<List<Actor>>
+    suspend fun updateActors()
 }

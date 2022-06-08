@@ -7,7 +7,7 @@ import com.example.tmdbclient.data.model.Movie
 import com.example.tmdbclient.data.model.TvShow
 
 @Database(entities = [Movie::class, TvShow::class, Actor::class], version = 1, exportSchema = false)
-abstract class TMDBDatabase: RoomDatabase() {
+abstract class TMDBDatabase : RoomDatabase() {
     abstract fun movieDao(): MoviesDao
     abstract fun tvDao(): TvShowsDao
     abstract fun actorDao(): ActorsDao

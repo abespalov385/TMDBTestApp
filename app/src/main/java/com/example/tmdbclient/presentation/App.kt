@@ -7,7 +7,7 @@ import com.example.tmdbclient.presentation.di.actor.ActorSubComponent
 import com.example.tmdbclient.presentation.di.movie.MovieSubComponent
 import com.example.tmdbclient.presentation.di.tvshow.TvShowSubComponent
 
-class App: Application(), Injector {
+class App : Application(), Injector {
     private lateinit var appComponent: AppComponent
 
     override fun onCreate() {
@@ -19,7 +19,12 @@ class App: Application(), Injector {
             .build()
     }
 
-    override fun createMovieSubComponent(): MovieSubComponent = appComponent.movieSubComponent().create()
-    override fun createTvShowSubComponent(): TvShowSubComponent = appComponent.tvShowSubComponent().create()
-    override fun createActorSubComponent(): ActorSubComponent = appComponent.actorSubComponent().create()
+    override fun createMovieSubComponent(): MovieSubComponent =
+        appComponent.movieSubComponent().create()
+
+    override fun createTvShowSubComponent(): TvShowSubComponent =
+        appComponent.tvShowSubComponent().create()
+
+    override fun createActorSubComponent(): ActorSubComponent =
+        appComponent.actorSubComponent().create()
 }

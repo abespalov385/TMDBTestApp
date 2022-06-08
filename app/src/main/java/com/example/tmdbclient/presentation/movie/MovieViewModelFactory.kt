@@ -8,7 +8,8 @@ import com.example.tmdbclient.domain.usecases.UpdateMoviesUseCase
 class MovieViewModelFactory(
     private val getMoviesUseCase: GetMoviesUseCase,
     private val updateMoviesUseCase: UpdateMoviesUseCase
-): ViewModelProvider.Factory {
+) : ViewModelProvider.Factory {
 
-    override fun <T : ViewModel> create(modelClass: Class<T>): T = MovieViewModel(getMoviesUseCase, updateMoviesUseCase) as T
+    override fun <T : ViewModel> create(modelClass: Class<T>): T =
+        MovieViewModel(getMoviesUseCase, updateMoviesUseCase) as T
 }

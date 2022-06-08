@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.tmdbclient.data.model.TvShow
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TvShowsDao {
@@ -16,4 +17,7 @@ interface TvShowsDao {
 
     @Query("SELECT * FROM popular_tv_shows")
     suspend fun getTvShows(): List<TvShow>
+
+    @Query("SELECT * FROM popular_tv_shows")
+    fun getTvShowsFlow(): Flow<List<TvShow>>
 }

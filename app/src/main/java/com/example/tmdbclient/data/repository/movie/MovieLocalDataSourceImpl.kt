@@ -4,12 +4,16 @@ import com.example.tmdbclient.data.db.MoviesDao
 import com.example.tmdbclient.data.model.Movie
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MovieLocalDataSourceImpl @Inject constructor(private val moviesDao: MoviesDao): MovieLocalDataSource {
+class MovieLocalDataSourceImpl @Inject constructor(private val moviesDao: MoviesDao) :
+    MovieLocalDataSource {
+
+    override fun getMoviesFlowFromDB(): Flow<List<Movie>> = moviesDao.getMoviesFlow()
 
     override suspend fun getMoviesFromDB(): List<Movie> = moviesDao.getMovies()
 

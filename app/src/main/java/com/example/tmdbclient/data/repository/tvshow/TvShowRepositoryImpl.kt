@@ -4,73 +4,49 @@ import android.util.Log
 import com.example.tmdbclient.data.model.TVShowList
 import com.example.tmdbclient.data.model.TvShow
 import com.example.tmdbclient.domain.repository.TvShowRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import retrofit2.Response
-import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class TvShowRepositoryImpl @Inject constructor(
     private val tvShowRemoteDataSource: TvShowRemoteDataSource,
-    private val tvShowCacheDataSource: TvShowCacheDataSource,
     private val tvShowLocalDataSource: TvShowLocalDataSource
-): TvShowRepository {
+) : TvShowRepository {
 
-    override suspend fun getTvShows(): List<TvShow>? = getTvShowsFromCache()
+    override fun getTvShows(): Flow<List<TvShow>> = flow {
+        emit(tvShowLocalDataSource.getTvShowsFromDB())
+        updateTvShows()
+        emitAll(tvShowLocalDataSource.getTvShowsFlowFromDB())
+    }.flowOn(Dispatchers.IO)
 
-    override suspend fun updateTvShows(): List<TvShow>? {
+    override suspend fun updateTvShows() {
         val newListOfTvShows = getTvShowsFromAPI()
-        tvShowLocalDataSource.clearAll()
-        tvShowLocalDataSource.saveTvShowsToDB(newListOfTvShows)
-        tvShowCacheDataSource.saveTvShowsToCache(newListOfTvShows)
-        return newListOfTvShows
+        if (!newListOfTvShows.isNullOrEmpty()) {
+            tvShowLocalDataSource.clearAll()
+            tvShowLocalDataSource.saveTvShowsToDB(newListOfTvShows)
+        }
     }
 
-    suspend fun getTvShowsFromAPI(): List<TvShow> {
-        lateinit var tvShowsList: List<TvShow>
+    private suspend fun getTvShowsFromAPI(): List<TvShow> {
+        var tvShowList: List<TvShow> = emptyList()
+        withContext(Dispatchers.IO) {
+            try {
+                val response: Response<TVShowList> = tvShowRemoteDataSource.getTvShows()
+                response.body()?.let {
+                    tvShowList = it.results
+                }
+            } catch (exception: Exception) {
+                Log.i("MyTag", exception.message.toString())
 
-        try {
-            val response: Response<TVShowList> = tvShowRemoteDataSource.getTvShows()
-            response.body()?.let {
-                tvShowsList = it.results
             }
-        } catch (exception: Exception) {
-            Log.i("MyTag", exception.message.toString())
         }
-
-        return tvShowsList
-    }
-
-    suspend fun getTvShowsFromDB(): List<TvShow> {
-        lateinit var tvShowsList: List<TvShow>
-
-        try {
-            tvShowsList = tvShowLocalDataSource.getTvShowsFromDB()
-        } catch (exception: Exception) {
-            Log.i("MyTag", exception.message.toString())
-        }
-
-        if (tvShowsList.isEmpty()) {
-            tvShowsList = getTvShowsFromAPI()
-        }
-
-        return tvShowsList
-    }
-
-    suspend fun getTvShowsFromCache(): List<TvShow> {
-        lateinit var tvShowsList: List<TvShow>
-
-        try {
-            tvShowsList = tvShowCacheDataSource.getTvShowsFromCache()
-        } catch (exception: Exception) {
-            Log.i("MyTag", exception.message.toString())
-        }
-
-        if (tvShowsList.isEmpty()) {
-            tvShowsList = getTvShowsFromDB()
-            tvShowCacheDataSource.saveTvShowsToCache(tvShowsList)
-        }
-
-        return tvShowsList
+        return tvShowList
     }
 }

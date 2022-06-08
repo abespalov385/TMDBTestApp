@@ -3,38 +3,31 @@ package com.example.tmdbclient.presentation.tvshow
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.tmdbclient.R
-import com.example.tmdbclient.data.model.Movie
 import com.example.tmdbclient.data.model.TvShow
 import com.example.tmdbclient.databinding.ListItemBinding
 
-class TvShowAdapter: RecyclerView.Adapter<MyViewHolder>() {
-
-    private val tvShowList = ArrayList<TvShow>()
-
-    fun setList(tvShows: List<TvShow>) {
-        tvShowList.clear()
-        tvShowList.addAll(tvShows)
-        notifyDataSetChanged()
-    }
+class TvShowAdapter : ListAdapter<TvShow, MyViewHolder>(TvShowsDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val binding: ListItemBinding = DataBindingUtil.inflate(layoutInflater, R.layout.list_item, parent, false)
+        val binding: ListItemBinding =
+            DataBindingUtil.inflate(layoutInflater, R.layout.list_item, parent, false)
         return MyViewHolder(binding)
     }
 
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(tvShowList[position])
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount(): Int = tvShowList.size
 }
 
-class MyViewHolder(val binding: ListItemBinding): RecyclerView.ViewHolder(binding.root) {
+class MyViewHolder(val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(tvShow: TvShow) {
         binding.titleTextView.text = tvShow.name
         binding.descriptionTextView.text = tvShow.overview
@@ -43,5 +36,20 @@ class MyViewHolder(val binding: ListItemBinding): RecyclerView.ViewHolder(bindin
             .load(posterUrl)
             .into(binding.imageView)
 
+    }
+}
+
+object TvShowsDiffCallback : DiffUtil.ItemCallback<TvShow>() {
+    override fun areItemsTheSame(oldItem: TvShow, newItem: TvShow): Boolean {
+        return oldItem == newItem
+
+    }
+
+    override fun areContentsTheSame(oldItem: TvShow, newItem: TvShow): Boolean {
+        return oldItem.id == newItem.id
+                && oldItem.name == newItem.name
+                && oldItem.firstAirDate == newItem.firstAirDate
+                && oldItem.overview == newItem.overview
+                && oldItem.posterPath == newItem.posterPath
     }
 }
